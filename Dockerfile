@@ -1,44 +1,30 @@
-# This is a multi-stage Dockerfile and requires >= Docker 17.05
-# https://docs.docker.com/engine/userguide/eng-image/multistage-build/
-FROM gobuffalo/buffalo:v0.18.14 as builder
+# syntax=docker/dockerfile:1
 
-ENV GOPROXY http://proxy.golang.org
+# Build the application from source
+FROM golang:1.20 AS build-stage
 
-RUN mkdir -p /src/whoami
-WORKDIR /src/whoami
+WORKDIR /app
 
-# this will cache the npm install step, unless package.json changes
-ADD package.json .
-ADD yarn.lock .yarnrc.yml ./
-RUN mkdir .yarn
-COPY .yarn .yarn
-RUN yarn install
-# Copy the Go Modules manifests
-COPY go.mod go.mod
-COPY go.sum go.sum
-# cache deps before building and copying source so that we don't need to re-download as much
-# and so that source changes don't invalidate our downloaded layer
+COPY go.mod go.sum ./
 RUN go mod download
 
-ADD . .
-RUN buffalo build --static -o /bin/app
+COPY *.go ./
 
-FROM alpine
-RUN apk add --no-cache bash
-RUN apk add --no-cache ca-certificates
+RUN CGO_ENABLED=0 GOOS=linux go build -o /docker-gs-ping
 
-WORKDIR /bin/
+# Run the tests in the container
+FROM build-stage AS run-test-stage
+RUN go test -v ./...
 
-COPY --from=builder /bin/app .
+# Deploy the application binary into a lean image
+FROM gcr.io/distroless/base-debian11 AS build-release-stage
 
-# Uncomment to run the binary in "production" mode:
-# ENV GO_ENV=production
+WORKDIR /
 
-# Bind the app to 0.0.0.0 so it can be seen from outside the container
-ENV ADDR=0.0.0.0
+COPY --from=build-stage /docker-gs-ping /docker-gs-ping
 
-EXPOSE 3000
+EXPOSE 8080
 
-# Uncomment to run the migrations before running the binary:
-# CMD /bin/app migrate; /bin/app
-CMD exec /bin/app
+USER nonroot:nonroot
+
+ENTRYPOINT ["/docker-gs-ping"]
