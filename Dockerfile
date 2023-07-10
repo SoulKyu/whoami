@@ -1,30 +1,30 @@
 # syntax=docker/dockerfile:1
 
 # Build the application from source
-FROM golang:1.20 AS build-stage
+FROM golang:1.20.5-alpine3.18 AS build-stage
 
+# Définit le répertoire de travail dans le conteneur
 WORKDIR /app
 
-COPY go.mod go.sum ./
-RUN go mod download
+# Copie les fichiers de code source dans le conteneur
+COPY . .
 
-COPY *.go ./
-
-RUN CGO_ENABLED=0 GOOS=linux go build -o /docker-gs-ping
+# Compile l'application Go
+RUN go build -o whoami
 
 # Run the tests in the container
 FROM build-stage AS run-test-stage
 RUN go test -v ./...
 
 # Deploy the application binary into a lean image
-FROM gcr.io/distroless/base-debian11 AS build-release-stage
+FROM alpine:latest AS build-release-stage
 
 WORKDIR /
 
-COPY --from=build-stage /docker-gs-ping /docker-gs-ping
+COPY --from=build-stage /app/whoami /app/whoami
+
+#RUN mkdir /lib64 && ln -s /lib/libc.musl-x86_64.so.1 /lib64/ld-linux-x86-64.so.2
 
 EXPOSE 8080
 
-USER nonroot:nonroot
-
-ENTRYPOINT ["/docker-gs-ping"]
+ENTRYPOINT ["/app/whoami"]
