@@ -17,6 +17,17 @@ html, body {
 .header-container {
   background-color: #aac0f0;
   padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.login-form {
+  display: flex;
+}
+
+.login-form input {
+  margin-right: 10px;
 }
 
 .header-content {

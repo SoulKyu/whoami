@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>WhoAmi - Page Personnelle</title>
+    <title>Mes Tutoriels</title>
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
@@ -9,6 +9,13 @@
         <div class="header-container">
             <div class="header-content">
               <h1>WhoAmi</h1>
+            </div>
+            <div class="login-form">
+                <form action="/login" method="POST">
+                    <input type="text" name="username" placeholder="Nom d'utilisateur" required>
+                    <input type="password" name="password" placeholder="Mot de passe" required>
+                    <button type="submit">Se connecter</button>
+                </form>
             </div>
         </div>
         <div class="main-container">
@@ -26,26 +33,12 @@
             </div>
             <div class="main-content">
                 <section>
-                    <h2>Qui suis-je ?</h2>
-                    <p>Je m'appelle SoulKyu et vous vous trouvez actuellement sur mon projet de site web developpé en Go à l'aide du framework Echo.
-                    </p>
-                    <p>
-                        Je suis Ingénieur SRE depuis un plus de 4 ans maintenant spécialisé dans les solutions Cloud et Kubernetes.<br>
-                        Ce site devrait me permettre de vous montrer mes différents projets HomeLab !
-                    </p>
-                    <p>
-                        Vous devriez retrouver dans la section <a href="tutoriels">Mes Tutoriels</a>, l'ensemble des tutoriels de mes HomeLab : 
-                    </p>
+                    <h2>Mes Tutoriels</h2>
                     <ul>
-                        <li>Mon HomeLab physique, mes petits serveurs</li>
-                        <li>Mon cluster Kubernetes</li>
-                        <li>Mes applications</li>
-                        <li>Comment j'automatise mes tâches</li>
-                        <li>Ma stack de média</li>
+                        <li><a href="tutorial1.html">Tutoriel 1</a></li>
+                        <li><a href="tutorial2.html">Tutoriel 2</a></li>
+                        <li><a href="tutorial3.html">Tutoriel 3</a></li>
                     </ul>
-                    <p>
-                        L'objectif de ce projet c'est aussi d'améliorer mes compétences de developpement qui sont très pauvres, j'essaie de construire tout ca en auto-didacte
-                    </p>
                 </section>
             </div>
         </div>
