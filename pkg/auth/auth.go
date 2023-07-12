@@ -3,6 +3,7 @@ package auth
 
 import (
 	"database/sql"
+	"whoami/pkg/database"
 )
 
 // CheckCredentials vérifie les informations d'identification de l'utilisateur dans la base de données

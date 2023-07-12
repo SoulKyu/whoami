@@ -2,19 +2,21 @@ package main
 
 import (
 	"whoami/routes"
-	"whoami/pkg/auth"
+	//"whoami/pkg/auth"
 	"whoami/pkg/database"
+	"whoami/pkg/handlers"
+	"whoami/middleware"
 
-	"github.com/gorilla/sessions"
-	"net/http"
+	//"github.com/gorilla/sessions"
+	//"net/http"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
+	echoMiddleware "github.com/labstack/echo/v4/middleware"
 )
 
 func main() {
 
-	var sessionStore = sessions.NewCookieStore([]byte("your-secret-key"))
+	//var sessionStore = sessions.NewCookieStore([]byte("your-secret-key"))
 
 	// Connexion à la base de données
 	db, err := database.GetDB()
@@ -26,12 +28,8 @@ func main() {
 	e := echo.New()
 
 	// Middleware
-	e.Use(middleware.Logger())
-	e.Use(middleware.Recover())
-	e.Use(middleware.SessionWithConfig(middleware.SessionConfig{
-		SaveToStorage: true,
-		Store:         sessionStore,
-	}))
+	e.Use(echoMiddleware.Logger())
+	e.Use(echoMiddleware.Recover())
 	
 
 	e.Static("/", "templates")
@@ -41,7 +39,8 @@ func main() {
 	e.GET("/", routes.Index)
 	e.GET("/tutoriels", routes.Tutoriel)
 	e.GET("/whoami", routes.Whoami)
-	e.POST("/login", )
+	e.POST("/login", handlers.Login)
+	e.GET("/logout", handlers.Logout, middleware.IsLoggedIn)
 
 	e.Logger.Fatal(e.Start(":8080"))
 }
