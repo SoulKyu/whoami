@@ -6,5 +6,5 @@ import (
 
 // Index route handler
 func Tutoriel(c echo.Context) error {
-	return c.File("templates/mestutoriels.html")
+	return c.File("/app/templates/mestutoriels.html")
 }

@@ -6,5 +6,5 @@ import (
 
 // Index route handler
 func Whoami(c echo.Context) error {
-	return c.File("templates/whoami.html")
+	return c.File("/app/templates/whoami.html")
 }

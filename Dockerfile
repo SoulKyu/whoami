@@ -9,6 +9,8 @@ WORKDIR /app
 # Copie les fichiers de code source dans le conteneur
 COPY . .
 
+RUN apk add --update-cache gcc musl-dev
+
 # Compile l'application Go
 RUN go build -o whoami
 
@@ -19,9 +21,13 @@ RUN go test -v ./...
 # Deploy the application binary into a lean image
 FROM alpine:latest AS build-release-stage
 
-WORKDIR /
+WORKDIR /app
+
+RUN apk add --update-cache gcc musl-dev
 
 COPY --from=build-stage /app/whoami /app/whoami
+COPY --from=build-stage /app/templates /app/templates
+COPY --from=build-stage /app/static /app/static
 
 #RUN mkdir /lib64 && ln -s /lib/libc.musl-x86_64.so.1 /lib64/ld-linux-x86-64.so.2
 

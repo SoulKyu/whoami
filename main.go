@@ -3,15 +3,15 @@ package main
 import (
 	"whoami/routes"
 	//"whoami/pkg/auth"
+	"whoami/middleware"
 	"whoami/pkg/database"
 	"whoami/pkg/handlers"
-	"whoami/middleware"
+	//"net/http"
 
 	//"github.com/gorilla/sessions"
-	//"net/http"
-	_ "github.com/mattn/go-sqlite3"
 	"github.com/labstack/echo/v4"
 	echoMiddleware "github.com/labstack/echo/v4/middleware"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 func main() {
@@ -30,10 +30,9 @@ func main() {
 	// Middleware
 	e.Use(echoMiddleware.Logger())
 	e.Use(echoMiddleware.Recover())
-	
 
-	e.Static("/", "templates")
-	e.Static("/static", "static")
+	e.Static("/", "/app/templates")
+	e.Static("/static", "/app/static")
 
 	// Routes
 	e.GET("/", routes.Index)
