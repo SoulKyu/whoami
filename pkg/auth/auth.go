@@ -1,15 +1,25 @@
-// pkg/auth/auth.go
 package auth
 
 import (
 	"database/sql"
-	"whoami/pkg/database"
+	"fmt"
 )
 
 // CheckCredentials vérifie les informations d'identification de l'utilisateur dans la base de données
-func CheckCredentials(db *sql.DB, username, password string) bool {
+func CheckCredentials(db *sql.DB, username, password string) (bool, string, error) {
 	var count int
-	row := db.QueryRow("SELECT COUNT(*) FROM users WHERE username = ? AND password = ?", username, password)
-	row.Scan(&count)
-	return count > 0
+	var user string
+	row := db.QueryRow("SELECT COUNT(*), username FROM users WHERE username = ? AND password = ?", username, password)
+	err := row.Scan(&count, &user)
+
+	if err != nil {
+		return false, "", err
+	}
+
+	if count > 0 {
+		fmt.Printf("L'utilisateur suivant : %s a été identifié \n", user)
+		return true, user, nil
+	}
+
+	return false, "", nil
 }

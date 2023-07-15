@@ -6,6 +6,7 @@ import (
 	"whoami/middleware"
 	"whoami/pkg/database"
 	"whoami/pkg/handlers"
+
 	//"net/http"
 
 	//"github.com/gorilla/sessions"
@@ -15,8 +16,6 @@ import (
 )
 
 func main() {
-
-	//var sessionStore = sessions.NewCookieStore([]byte("your-secret-key"))
 
 	// Connexion à la base de données
 	db, err := database.GetDB()
@@ -31,8 +30,8 @@ func main() {
 	e.Use(echoMiddleware.Logger())
 	e.Use(echoMiddleware.Recover())
 
-	e.Static("/", "/app/templates")
-	e.Static("/static", "/app/static")
+	e.Static("/", "templates")
+	e.Static("/static", "static")
 
 	// Routes
 	e.GET("/", routes.Index)

@@ -2,20 +2,26 @@
 package middleware
 
 import (
+	"fmt"
 	"net/http"
+	"whoami/pkg/session"
 
-	"github.com/gorilla/sessions"
 	"github.com/labstack/echo/v4"
 )
 
-var sessionStore = sessions.NewCookieStore([]byte("your-secret-key"))
+var sessionStore = session.Store
 
 // IsLoggedIn est un middleware qui vérifie si un utilisateur est connecté
 func IsLoggedIn(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		session, _ := sessionStore.Get(c.Request(), "session-name")
-		userID, ok := session.Values["userID"].(string)
-		if !ok || userID == "" {
+		session, err := sessionStore.Get(c.Request(), "session-name")
+		if err != nil {
+			fmt.Printf("L'erreur suivante est survenue %v", err)
+			return c.String(http.StatusInternalServerError, "Une erreur est survenue lors de la récupération de la session pour IsLoggedIn")
+		}
+
+		authenticated, ok := session.Values["authenticated"].(bool)
+		if !ok || !authenticated {
 			return c.Redirect(http.StatusSeeOther, "/")
 		}
 		return next(c)
