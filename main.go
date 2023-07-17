@@ -42,7 +42,7 @@ func main() {
 	e.Static("/", "templates")
 	e.Static("/static", "static")
 	renderer := &CustomRenderer{
-		templates: template.Must(template.ParseGlob("templates/page.html")),
+		templates: template.Must(template.ParseGlob("templates/*.html")),
 	}
 	e.Renderer = renderer
 
@@ -55,6 +55,8 @@ func main() {
 	e.GET("/newPage", routes.CreatePageHandler, middleware.IsLoggedIn)
 	e.POST("/createPage", routes.CreatePage, middleware.IsLoggedIn)
 	e.POST("/deletePage/:title", routes.DeletePageByTitle, middleware.IsLoggedIn)
+	e.POST("/updatePage/:title", routes.UpdatePageHandler)
+	e.POST("/perfromUpdatePage", routes.PerformUpdate)
 	e.GET("/pages/:title", routes.TemplatedPages)
 	e.Logger.Fatal(e.Start(":8080"))
 }

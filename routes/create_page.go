@@ -51,5 +51,5 @@ func CreatePage(c echo.Context) error {
 	}
 
 	// redirect to new page
-	return c.Redirect(http.StatusSeeOther, fmt.Sprintf("/pages/%d", page.ID))
+	return c.Redirect(http.StatusSeeOther, fmt.Sprintf("/pages/%s", page.Title))
 }

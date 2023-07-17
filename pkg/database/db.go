@@ -20,7 +20,14 @@ func GetDB() (*sql.DB, error) {
 	if os.Getenv("APP_ENV") == "production" {
 		db, err = sql.Open("postgres", "user=pqgotest dbname=pqgotest sslmode=verify-full")
 	} else {
-		db, err = sql.Open("sqlite3", "./dev.db")
+		dbPath := os.Getenv("DB_PATH")
+		if dbPath == "" {
+			db, err = sql.Open("sqlite3", "./dev.db")
+		} else {
+			dbFullPath := fmt.Sprintf("%s/dev.db", dbPath)
+			db, err = sql.Open("sqlite3", dbFullPath)
+		}
+
 	}
 
 	if err != nil {
@@ -89,6 +96,28 @@ func CreatePage(page *models.Page) error {
 	return nil
 }
 
+func UpdatePage(page *models.Page) error {
+	db, err := GetDB()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Prépare une requête SQL pour mettre à jour les données
+	stmt, err := db.Prepare("UPDATE pages SET content = ? WHERE title = ?")
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	// Exécute la requête en passant les données de la page
+	_, err = stmt.Exec(page.Content, page.Title)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func GetPageByTitle(title string) (*models.Page, error) {
 	db, err := GetDB()
 	if err != nil {
@@ -107,7 +136,7 @@ func GetPageByTitle(title string) (*models.Page, error) {
 			return nil, fmt.Errorf("no page found with title: %s", title)
 		}
 		// Autre erreur
-		return nil, err
+		return nil, fmt.Errorf("an error happens while trying to scan: %v", err)
 	}
 
 	page := &models.Page{

@@ -218,3 +218,19 @@ footer {
   right: 10px; /* Ajustez cette valeur selon vos besoins */
   position: fixed;
 }
+
+.update-button {
+  background-color: #3639f4; /* Red background */
+  border: none; /* Remove border */
+  color: white; /* White text */
+  padding: 15px 32px; /* Some padding */
+  text-align: center; /* Centered text */
+  text-decoration: none; /* Remove underline */
+  display: inline-block; /* Display as inline-block */
+  font-size: 16px; /* Change text size */
+  margin: 4px 2px; /* Some margin */
+  cursor: pointer; /* Add a mouse pointer on hover */
+  bottom: 100px; /* Ajustez cette valeur selon vos besoins */
+  right: 220px; /* Ajustez cette valeur selon vos besoins */
+  position: fixed;
+}
