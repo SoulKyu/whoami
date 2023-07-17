@@ -3,6 +3,7 @@
 <head>
     <title>Mes Tutoriels</title>
     <link rel="stylesheet" type="text/css" href="/static/style.css">
+    <link rel="icon" type="image/svg+xml" href="/static/logo.svg">
 </head>
 <body>
     <div class="container">
@@ -35,29 +36,32 @@
                 <div class="sidebar-rectangle"></div>
                     <ul>
                       <li><a href="/">Accueil</a></li>
-                      <li><a href="tutoriels">Mes Tutoriels</a></li>
-                      <li><a href="whoami">Whoami</a></li>
+                      <li><a href="/tutoriels">Mes Tutoriels</a></li>
+                      <li><a href="/whoami">Whoami</a></li>
                       {{if .Authenticated}}
-                      <li><a href="newPage">Create Tutoriels</a></li>
+                      <li><a href="/newPage">Create Tutoriels</a></li>
+                      <li><a href="/kubernetes">Kubernetes</a></li>
                       {{else}}
                       {{end}}
                     </ul>
                 <div class="sidebar-rectangle"></div>
             </div>
-            <div class="main-content">
+            <div class="page-content">
                 <section>
                     <h2>Mes Tutoriels</h2>
-                    <ul>
+                    <div class="tutorial-container">
                         {{range .Pages}}
-                        <li><a href="pages/{{.Title}}">{{.Title}}</a></li>
+                        <div class="tutorial-item">
+                            <h3 class="tutorial-title"><a class="tutorial-link" href="pages/{{.Title}}">{{.Title}}</a></h3>
+                        </div>
                         {{end}}
-                    </ul>
+                    </div>
                 </section>
             </div>
         </div>
+        <footer>
+            <p>© 2023 Whoami. Tous droits réservés. Site entièrement automatisé via gitops</p>
+        </footer>
     </div>
-    <footer>
-        <p>© 2023 Whoami. Tous droits réservés. Site entiérement automatisé via gitops</p>
-    </footer>
 </body>
 </html>

@@ -53,10 +53,11 @@ func main() {
 	e.POST("/login", handlers.Login)
 	e.GET("/logout", handlers.Logout, middleware.IsLoggedIn)
 	e.GET("/newPage", routes.CreatePageHandler, middleware.IsLoggedIn)
+	e.GET("/kubernetes", routes.GetKubernetesApplications, middleware.IsLoggedIn)
 	e.POST("/createPage", routes.CreatePage, middleware.IsLoggedIn)
 	e.POST("/deletePage/:title", routes.DeletePageByTitle, middleware.IsLoggedIn)
-	e.POST("/updatePage/:title", routes.UpdatePageHandler)
-	e.POST("/perfromUpdatePage", routes.PerformUpdate)
+	e.POST("/updatePage/:title", routes.UpdatePageHandler, middleware.IsLoggedIn)
+	e.POST("/perfromUpdatePage", routes.PerformUpdate, middleware.IsLoggedIn)
 	e.GET("/pages/:title", routes.TemplatedPages)
 	e.Logger.Fatal(e.Start(":8080"))
 }

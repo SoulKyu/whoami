@@ -72,17 +72,93 @@ html, body {
 .main-container {
   display: flex;
   flex-direction: row;
+  flex-grow: 1;
 }
+
+.namespace-toggle,
+.details-section,
+.section-toggle {
+    cursor: pointer;
+}
+
+.details-section {
+  border: 1px solid #cccccc9d;
+  margin-bottom: 20px;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.kube-app {
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.kube-app h3 {
+  color: #333;
+}
+
+.kube-app h4 {
+  color: #666;
+}
+
+.kube-app ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.kube-app ul li {
+  background: #f9f9f9;
+  padding: 5px;
+  margin-bottom: 5px;
+  border-radius: 3px;
+  font-size: 0.8em;
+}
+
+.tutorial-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  height: 100%;
+}
+
+.tutorial-item {
+  width: 300px; /* Ajustez la largeur selon vos besoins */
+  height: 150px; /* Ajustez la hauteur selon vos besoins */
+  background-color: #f2f2f2;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin: 10px;
+  padding: 10px;
+}
+
+.tutorial-title {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.tutorial-link {
+  color: #333;
+  text-decoration: none;
+}
+
+.tutorial-description {
+  font-size: 0.9em;
+  color: #666;
+}
+
 
 .main-content {
   flex-grow: 1;
   min-height: 100vh;
+  display: flex;
   flex-direction: column;
   align-items: stretch;
   padding: 20px;
   font-size: 1.1em;
   color: #333;
-  margin-bottom: 10px; /* Ajustez la valeur selon vos besoins */
+  margin-bottom: 10px;
 }
 
 .main-content section form {
@@ -158,6 +234,7 @@ footer {
   bottom: 0;
   width: 100%;
   height: 50px;
+  flex-shrink: 0;
   background-color: #e7eaf3;
   border-top: 2px solid #ccc;
   color: #333;
@@ -194,7 +271,9 @@ footer {
   width: 250px;
   background-color: #f3f8ff;
   border-right: 2px solid #d1e4f9;
-  height: 100vh;
+  min-height: 100vh; /* Ajustez la hauteur minimale selon vos besoins */
+  position: sticky;
+  top: 0;
 }
 
 .sidebar-rectangle {

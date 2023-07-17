@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WhoAmI</title>
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
+    <link rel="icon" type="image/svg+xml" href="/static/logo.svg">
+</head>
+<body>
+    <div class="container">
+        <div class="header-container">
+            <div class="header-content">
+                <h1>Kubernetes</h1>
+            </div>
+            {{if .Authenticated}}
+                <div class="logout-form">
+                    <p class="welcome-text">Bienvenue, {{.Username}} !</p>
+                    <form action="/logout" method="GET">
+                        <button type="submit">Se déconnecter</button>
+                    </form>
+                </div>
+            {{else}}
+                <div class="login-form">
+                    <form action="/login" method="POST">
+                        <input type="text" name="username" placeholder="Nom d'utilisateur" required>
+                        <input type="password" name="password" placeholder="Mot de passe" required>
+                        <button type="submit">Se connecter</button>
+                    </form>
+                </div>
+            {{end}}
+        </div>
+        <div class="main-container">
+            <div class="sidebar">
+                <div class="logo">
+                    <img src="/static/logo.svg" alt="logo-svg">
+                </div>
+                <div class="sidebar-rectangle"></div>
+                <ul>
+                    <li><a href="/">Accueil</a></li>
+                    <li><a href="tutoriels">Mes Tutoriels</a></li>
+                    <li><a href="whoami">Whoami</a></li>
+                    {{if .Authenticated}}
+                    <li><a href="newPage">Create Tutoriels</a></li>
+                    <li><a href="kubernetes">Kubernetes</a></li>
+                    {{else}}
+                    {{end}}
+                </ul>
+                <div class="sidebar-rectangle"></div>
+            </div>
+            <div class="main-content">
+                <section>
+                    <h2>Mes Applications Kubernetes</h2>
+                    {{range .kubeApplications}}
+                    <div class="kube-app">
+                        <h3 class="namespace-toggle">{{.Namespace}}</h3>
+                        <div class="details" style="display: none;">
+                            <div class="details-section">
+                                <h4 class="section-toggle">Pods:</h4>
+                                <ul class="section-items">
+                                    {{range .Pods}}
+                                    <li>{{.}}</li>
+                                    {{end}}
+                                </ul>
+                            </div>
+                            <div class="details-section">
+                                <h4 class="section-toggle">Ingresses:</h4>
+                                <ul class="section-items">
+                                    {{range .Ingresses}}
+                                    <li>{{.}}</li>
+                                    {{end}}
+                                </ul>
+                            </div>
+                            <div class="details-section">
+                                <h4 class="section-toggle">Services:</h4>
+                                <ul class="section-items">
+                                    {{range .Services}}
+                                    <li>{{.}}</li>
+                                    {{end}}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    {{end}}
+                </section>
+            </div>        
+        </div>
+    </div>
+    <footer>
+        <p>© 2023 Whoami. Tous droits réservés. Site entièrement automatisé via gitops</p>
+    </footer>
+</body>
+</html>
+<script>
+    const kubeApps = document.getElementsByClassName('kube-app');
+    for (let i = 0; i < kubeApps.length; i++) {
+        kubeApps[i].addEventListener('click', function (event) {
+            const target = event.target;
+            if (target.classList.contains('namespace-toggle') || target.classList.contains('section-toggle')) {
+                const details = this.querySelector('.details');
+                details.style.display = details.style.display === 'none' ? 'block' : 'none';
+            }
+        });
+    }
+</script>
+<script>
+    const detailsSections = document.getElementsByClassName('details-section');
+    for (let i = 0; i < detailsSections.length; i++) {
+        detailsSections[i].addEventListener('click', function () {
+            const sectionContent = this.querySelector('.section-items');
+            sectionContent.style.display = sectionContent.style.display === 'none' ? 'block' : 'none';
+        });
+    }
+</script>

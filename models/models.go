@@ -1,5 +1,10 @@
 package models
 
+import (
+	corev1 "k8s.io/api/core/v1"
+	networkingv1 "k8s.io/api/networking/v1"
+)
+
 type Users struct {
 	Username    string `json:"username"`
 	Firstname   string `json:"firstname,omitempty"`
@@ -19,4 +24,18 @@ type Page struct {
 	ID      int
 	Title   string
 	Content string
+}
+
+type Application struct {
+	Name      string
+	Namespace corev1.Namespace
+	Pods      []corev1.Pod
+	Ingress   []networkingv1.Ingress
+}
+
+type NamespaceResources struct {
+	Namespace string
+	Pods      []string
+	Ingresses []string
+	Services  []string
 }
