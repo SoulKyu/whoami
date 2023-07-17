@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>WhoAmi</title>
+    <title>Create Page</title>
     <link rel="stylesheet" type="text/css" href="/static/style.css">
 </head>
 <body>
     <div class="container">
         <div class="header-container">
             <div class="header-content">
-              <h1>WhoAmI</h1>
+                <h1>Create a new page</h1>
             </div>
             {{if .Authenticated}}
                 <div class="logout-form">
@@ -33,22 +33,27 @@
                     <img src="/static/logo.svg" alt="logo-svg">
                 </div>
                 <div class="sidebar-rectangle"></div>
-                    <ul>
-                      <li><a href="/">Accueil</a></li>
-                      <li><a href="tutoriels">Mes Tutoriels</a></li>
-                      <li><a href="whoami">Whoami</a></li>
-                      {{if .Authenticated}}
-                      <li><a href="newPage">Create Tutoriels</a></li>
-                      {{else}}
-                      {{end}}
-                    </ul>
+                <ul>
+                    <li><a href="/">Accueil</a></li>
+                    <li><a href="tutoriels">Mes Tutoriels</a></li>
+                    <li><a href="whoami">Whoami</a></li>
+                    {{if .Authenticated}}
+                    <li><a href="newPage">Create Tutoriels</a></li>
+                    {{else}}
+                    {{end}}
+                </ul>
                 <div class="sidebar-rectangle"></div>
             </div>
             <div class="main-content">
-                <section>
-                    <h2>Bienvenue sur le site de SoulKyu !</h2>
-                    <p>Vous trouverez sur ce site l'ensemble de mes documentations et de mes projets.</p>
-                </section>
+                <section class="form-section">
+                    <form action="/createPage" method="POST">
+                        <label for="title">Titre:</label>
+                        <input type="text" id="title" name="title" required>
+                        <label for="content"></label>
+                        <textarea id="content" name="content" required></textarea>
+                        <input type="submit" value="Submit">
+                    </form>
+                </section class="form-section">
             </div>
         </div>
     </div>
@@ -57,3 +62,7 @@
     </footer>
 </body>
 </html>
+<script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
+<script>
+    CKEDITOR.replace('content');
+</script>

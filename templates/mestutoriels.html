@@ -2,13 +2,13 @@
 <html>
 <head>
     <title>Mes Tutoriels</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
 </head>
 <body>
     <div class="container">
         <div class="header-container">
             <div class="header-content">
-              <h1>WhoAmi</h1>
+              <h1>WhoAmI</h1>
             </div>
             {{if .Authenticated}}
                 <div class="logout-form">
@@ -37,6 +37,10 @@
                       <li><a href="/">Accueil</a></li>
                       <li><a href="tutoriels">Mes Tutoriels</a></li>
                       <li><a href="whoami">Whoami</a></li>
+                      {{if .Authenticated}}
+                      <li><a href="newPage">Create Tutoriels</a></li>
+                      {{else}}
+                      {{end}}
                     </ul>
                 <div class="sidebar-rectangle"></div>
             </div>
@@ -44,9 +48,9 @@
                 <section>
                     <h2>Mes Tutoriels</h2>
                     <ul>
-                        <li><a href="tutorial1.html">Tutoriel 1</a></li>
-                        <li><a href="tutorial2.html">Tutoriel 2</a></li>
-                        <li><a href="tutorial3.html">Tutoriel 3</a></li>
+                        {{range .Pages}}
+                        <li><a href="pages/{{.Title}}">{{.Title}}</a></li>
+                        {{end}}
                     </ul>
                 </section>
             </div>

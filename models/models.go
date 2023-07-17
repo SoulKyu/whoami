@@ -7,10 +7,16 @@ type Users struct {
 	Password    string `json:"password,omitempty"`
 	Token       string `json:"token,omitempty"`
 	DateCreated string `json:"date_created,omitempty"`
- }
- type Error struct { 
-	ResponseCode      int    `json:"rc"` 
-	Message           string `json:"message"` 
-	Detail            string `json:"detail"` 
-	ExternalReference string `json:"ext_ref"` 
- }
+}
+type Error struct {
+	ResponseCode      int    `json:"rc"`
+	Message           string `json:"message"`
+	Detail            string `json:"detail"`
+	ExternalReference string `json:"ext_ref"`
+}
+
+type Page struct {
+	ID      int
+	Title   string
+	Content string
+}

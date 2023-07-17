@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>WhoAmI - Page Personnelle</title>
+    <title>WhoAmi</title>
     <link rel="stylesheet" type="text/css" href="/static/style.css">
 </head>
 <body>
@@ -35,10 +35,10 @@
                 <div class="sidebar-rectangle"></div>
                     <ul>
                       <li><a href="/">Accueil</a></li>
-                      <li><a href="tutoriels">Mes Tutoriels</a></li>
-                      <li><a href="whoami">Whoami</a></li>
+                      <li><a href="/tutoriels">Mes Tutoriels</a></li>
+                      <li><a href="/whoami">Whoami</a></li>
                       {{if .Authenticated}}
-                      <li><a href="newPage">Create Tutoriels</a></li>
+                      <li><a href="/newPage">Create Tutoriels</a></li>
                       {{else}}
                       {{end}}
                     </ul>
@@ -46,32 +46,19 @@
             </div>
             <div class="main-content">
                 <section>
-                    <h2>Qui suis-je ?</h2>
-                    <p>Je m'appelle SoulKyu et vous vous trouvez actuellement sur mon projet de site web developpé en Go à l'aide du framework Echo.
-                    </p>
-                    <p>
-                        Je suis Ingénieur SRE depuis un plus de 4 ans maintenant spécialisé dans les solutions Cloud et Kubernetes.<br>
-                        Ce site devrait me permettre de vous montrer mes différents projets HomeLab !
-                    </p>
-                    <p>
-                        Vous devriez retrouver dans la section <a href="tutoriels">Mes Tutoriels</a>, l'ensemble des tutoriels de mes HomeLab : 
-                    </p>
-                    <ul>
-                        <li>Mon HomeLab physique, mes petits serveurs</li>
-                        <li>Mon cluster Kubernetes</li>
-                        <li>Mes applications</li>
-                        <li>Comment j'automatise mes tâches</li>
-                        <li>Ma stack de média</li>
-                    </ul>
-                    <p>
-                        L'objectif de ce projet c'est aussi d'améliorer mes compétences de developpement qui sont très pauvres, j'essaie de construire tout ca en auto-didacte
-                    </p>
+                    <h2>{{.Title}}</h2>
+                    <p>{{.Content}}</p>
+                    {{if .Authenticated}}
+                    <form action="/deletePage/{{.Title}}" method="POST">
+                        <button type="submit" class="delete-button">Supprimer la page</button>
+                    </form>
+                    {{end}}
                 </section>
             </div>
         </div>
     </div>
     <footer>
-        <p>© 2023 Whoami. Tous droits réservés. Site entiérement automatisé via gitops</p>
+        <p>© 2023 Whoami. Tous droits réservés. Site entièrement automatisé via gitops</p>
     </footer>
 </body>
 </html>

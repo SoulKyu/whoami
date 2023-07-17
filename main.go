@@ -1,12 +1,13 @@
 package main
 
 import (
+	"html/template"
+	"io"
 	"whoami/routes"
 	//"whoami/pkg/auth"
 	"whoami/middleware"
 	"whoami/pkg/database"
 	"whoami/pkg/handlers"
-
 	//"net/http"
 
 	//"github.com/gorilla/sessions"
@@ -14,6 +15,14 @@ import (
 	echoMiddleware "github.com/labstack/echo/v4/middleware"
 	_ "github.com/mattn/go-sqlite3"
 )
+
+type CustomRenderer struct {
+	templates *template.Template
+}
+
+func (t *CustomRenderer) Render(w io.Writer, name string, data interface{}, c echo.Context) error {
+	return t.templates.ExecuteTemplate(w, name, data)
+}
 
 func main() {
 
@@ -32,6 +41,10 @@ func main() {
 
 	e.Static("/", "templates")
 	e.Static("/static", "static")
+	renderer := &CustomRenderer{
+		templates: template.Must(template.ParseGlob("templates/page.html")),
+	}
+	e.Renderer = renderer
 
 	// Routes
 	e.GET("/", routes.Index)
@@ -39,6 +52,9 @@ func main() {
 	e.GET("/whoami", routes.Whoami)
 	e.POST("/login", handlers.Login)
 	e.GET("/logout", handlers.Logout, middleware.IsLoggedIn)
-
+	e.GET("/newPage", routes.CreatePageHandler, middleware.IsLoggedIn)
+	e.POST("/createPage", routes.CreatePage, middleware.IsLoggedIn)
+	e.POST("/deletePage/:title", routes.DeletePageByTitle, middleware.IsLoggedIn)
+	e.GET("/pages/:title", routes.TemplatedPages)
 	e.Logger.Fatal(e.Start(":8080"))
 }
