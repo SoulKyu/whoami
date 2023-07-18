@@ -2,8 +2,10 @@ package routes
 
 import (
 	"html/template"
+	"log"
 	"net/http"
 	"whoami/pkg/database"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
@@ -11,11 +13,21 @@ import (
 func TemplatedPages(c echo.Context) error {
 	session, _ := sessionStore.Get(c.Request(), "session-name")
 
-	title := c.Param("title")
+	strid := c.Param("id")
+	var id *int
 
+	if strid != "" {
+		intValue, err := strconv.Atoi(strid)
+		if err != nil {
+			// Gestion de l'erreur de conversion
+			log.Printf("Erreur de conversion de l'ID : %v", err)
+		} else {
+			id = &intValue
+		}
+	}
 	// Récupérez la page de la base de données.
 	// Remplacez ceci par votre propre fonction pour obtenir une page par son titre.
-	page, err := database.GetPageByTitle(title)
+	page, err := database.GetPageById(id)
 	if err != nil {
 		// Si la page n'existe pas, renvoyez une erreur 404.
 		return c.String(http.StatusNotFound, "Page not found")
@@ -26,6 +38,8 @@ func TemplatedPages(c echo.Context) error {
 		// Rendu de la page avec le template HTML.
 		return c.Render(http.StatusOK, "page.html", map[string]interface{}{
 			"Title":         page.Title,
+			"URL":			 page.URL,
+			"ID": 			 page.ID,
 			"Content":       template.HTML(page.Content),
 			"Authenticated": true,
 			"Username":      session.Values["username"],

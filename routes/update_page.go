@@ -3,8 +3,11 @@ package routes
 import (
 	"fmt"
 	"html/template"
+	"log"
 	"net/http"
+	"net/url"
 	"whoami/models"
+	"strconv"
 	"whoami/pkg/database"
 
 	"github.com/labstack/echo/v4"
@@ -13,15 +16,25 @@ import (
 
 func UpdatePageHandler(c echo.Context) error {
 	session, _ := sessionStore.Get(c.Request(), "session-name")
-	title := c.Param("title")
-	fmt.Println("La titre de la page est le suivant : ", title)
+	strid := c.Param("id")
+	var id *int
+	if strid != "" {
+		intValue, err := strconv.Atoi(strid)
+		if err != nil {
+			// Gestion de l'erreur de conversion
+			log.Printf("Erreur de conversion de l'ID : %v", err)
+		} else {
+			id = &intValue
+		}
+	}
+	fmt.Println("La titre de la page est le suivant : ", id)
 
-	page, err := database.GetPageByTitle(title)
+	page, err := database.GetPageById(id)
 	if err != nil {
 		// Si la page n'existe pas, renvoyez une erreur 404.
 		return c.String(http.StatusNotFound, "Page not found")
 	}
-	fmt.Printf("Modification de la page : %s", page.Content)
+	fmt.Printf("Modification de la page : %s", page.Title)
 
 	// Rendu de la page avec le template HTML et envoie du contenu de la page
 	if auth, ok := session.Values["authenticated"].(bool); ok && auth {
@@ -49,16 +62,26 @@ func PerformUpdate(c echo.Context) error {
 	p := bluemonday.UGCPolicy()
 	content := p.Sanitize(unSafeContent)
 
-	page := &models.Page{
-		Title:   title,
-		Content: content,
-	}
+	currentPage, err := database.GetPageByTitle(title)
 
-	err := database.UpdatePage(page)
+	encodedUrl := url.PathEscape(title)
+	
 	if err != nil {
 		// Si la page n'existe pas, renvoyez une erreur 404.
 		return c.String(http.StatusNotFound, "Can't Update page")
 	}
 
-	return c.Redirect(http.StatusSeeOther, fmt.Sprintf("/pages/%s", page.Title))
+	page := &models.Page{
+		Title:   title,
+		Content: content,
+		URL: 	 encodedUrl,
+	}
+
+	err = database.UpdatePage(page)
+	if err != nil {
+		// Si la page n'existe pas, renvoyez une erreur 404.
+		return c.String(http.StatusNotFound, "Can't Update page")
+	}
+
+	return c.Redirect(http.StatusSeeOther, fmt.Sprintf("/pages/%d", currentPage.ID))
 }

@@ -7,12 +7,12 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func DeletePageByTitle(c echo.Context) error {
+func DeletePageById(c echo.Context) error {
 	// Obtenir le titre de l'URL
-	title := c.Param("title")
+	id := c.Param("id")
 
 	// Supprimer la page de la base de données
-	err := database.DeletePageByTitle(title)
+	err := database.DeletePageById(id)
 	if err != nil {
 		// Si une erreur se produit lors de la suppression, renvoyez une erreur 500
 		return c.String(http.StatusInternalServerError, "Erreur lors de la suppression de la page")

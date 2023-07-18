@@ -37,15 +37,16 @@ func GetDB() (*sql.DB, error) {
 	// Créez la table des utilisateurs si elle n'existe pas déjà
 	_, err = db.Exec(`
 		CREATE TABLE IF NOT EXISTS users (
-			id SERIAL PRIMARY KEY,
+			id INT AUTO_INCREMENT PRIMARY KEY,
 			username TEXT,
 			password TEXT
 		);
 		CREATE TABLE IF NOT EXISTS pages (
-			id SERIAL PRIMARY KEY,
+			id INT AUTO_INCREMENT PRIMARY KEY,
 			title TEXT NOT NULL,
 			content TEXT,
 			author TEXT,
+			URL TEXT,
 			created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 			updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 		)
@@ -81,14 +82,14 @@ func CreatePage(page *models.Page) error {
 	}
 
 	// Prépare une requête SQL pour insérer les données
-	stmt, err := db.Prepare("INSERT INTO pages (title, content) VALUES (?, ?)")
+	stmt, err := db.Prepare("INSERT INTO pages (title, content, url) VALUES (?, ?, ?)")
 	if err != nil {
 		return err
 	}
 	defer stmt.Close()
 
 	// Exécute la requête en passant les données de la page
-	_, err = stmt.Exec(page.Title, page.Content)
+	_, err = stmt.Exec(page.Title, page.Content, page.URL)
 	if err != nil {
 		return err
 	}
@@ -103,19 +104,51 @@ func UpdatePage(page *models.Page) error {
 	}
 
 	// Prépare une requête SQL pour mettre à jour les données
-	stmt, err := db.Prepare("UPDATE pages SET content = ? WHERE title = ?")
+	stmt, err := db.Prepare("UPDATE pages SET content = ?, URL = ? WHERE title = ?")
 	if err != nil {
 		return err
 	}
 	defer stmt.Close()
 
 	// Exécute la requête en passant les données de la page
-	_, err = stmt.Exec(page.Content, page.Title)
+	_, err = stmt.Exec(page.Content, page.URL, page.Title)
 	if err != nil {
 		return err
 	}
 
 	return nil
+}
+
+func GetPageById(id *int) (*models.Page, error) {
+	db, err := GetDB()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Prépare une requête SQL pour insérer les données
+	query := "SELECT content, title, URL FROM pages WHERE id = ?"
+	row := db.QueryRow(query, id)
+
+	var content, URL, title string
+	err = row.Scan(&content, &title, &URL)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			// Aucune ligne trouvée
+			return nil, fmt.Errorf("no page found with id: %d", id)
+		}
+		// Autre erreur
+		return nil, fmt.Errorf("an error happens while trying to scan: %v", err)
+	}
+
+	page := &models.Page{
+		ID:      id,
+		Title:   title,
+		Content: content,
+		URL:     URL,
+	}
+
+	return page, nil
+
 }
 
 func GetPageByTitle(title string) (*models.Page, error) {
@@ -148,28 +181,28 @@ func GetPageByTitle(title string) (*models.Page, error) {
 
 }
 
-func DeletePageByTitle(title string) error {
+func DeletePageById(id string) error {
 	db, err := GetDB()
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	// Prépare une requête SQL pour supprimer la ligne
-	stmt, err := db.Prepare("DELETE FROM pages WHERE title = ?")
+	stmt, err := db.Prepare("DELETE FROM pages WHERE id = ?")
 	if err != nil {
-		log.Fatalf("La page %s n'a pas pu être supprimer : %v", title, err)
+		log.Fatalf("La page %s n'a pas pu être supprimer : %v", id, err)
 	}
 
 	// Execute la requête
-	res, err := stmt.Exec(title)
+	res, err := stmt.Exec(id)
 	if err != nil {
-		log.Fatalf("La page %s n'a pas pu être supprimer : %v", title, err)
+		log.Fatalf("La page %s n'a pas pu être supprimer : %v", id, err)
 	}
 
 	// Vous pouvez également obtenir le nombre de lignes affectées
 	count, err := res.RowsAffected()
 	if err != nil {
-		log.Fatalf("La page %s n'a pas pu être supprimer car aucune page n'a été trouvée: %v", title, err)
+		log.Fatalf("La page %s n'a pas pu être supprimer car aucune page n'a été trouvée: %v", id, err)
 	}
 
 	log.Printf("Deleted %d row(s)", count)

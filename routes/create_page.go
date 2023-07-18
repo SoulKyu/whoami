@@ -2,6 +2,7 @@ package routes
 
 import (
 	"fmt"
+	"net/url"
 	"html/template"
 	"log"
 	"net/http"
@@ -35,6 +36,7 @@ func CreatePage(c echo.Context) error {
 	// parse form values
 	title := c.FormValue("title")
 	unSafeContent := c.FormValue("content")
+	encodedUrl := url.PathEscape(title)
 	p := bluemonday.UGCPolicy()
 	content := p.Sanitize(unSafeContent)
 
@@ -42,6 +44,7 @@ func CreatePage(c echo.Context) error {
 	page := &models.Page{
 		Title:   title,
 		Content: content,
+		URL: encodedUrl,
 	}
 
 	// save page to database
@@ -51,5 +54,5 @@ func CreatePage(c echo.Context) error {
 	}
 
 	// redirect to new page
-	return c.Redirect(http.StatusSeeOther, fmt.Sprintf("/pages/%s", page.Title))
+	return c.Redirect(http.StatusSeeOther, fmt.Sprintf("/pages/%d", page.ID))
 }

@@ -22,9 +22,10 @@ type Error struct {
 }
 
 type Page struct {
-	ID      int
+	ID      *int
 	Title   string
 	Content string
+	URL 	string
 }
 
 type Application struct {
@@ -35,6 +36,13 @@ type Application struct {
 }
 
 type NamespaceResources struct {
+	Namespace string
+	Pods      []string
+	Ingresses []string
+	Services  []string
+}
+
+type NamespaceResourcesV2 struct {
 	Namespace    corev1.Namespace
 	Pods         []corev1.Pod
 	Ingresses    []networkingv1.Ingress

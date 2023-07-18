@@ -13,7 +13,7 @@ import (
 // ListNamespaces returns a list of namespaces in the current Kubernetes cluster.
 func ListNamespaces() ([]corev1.Namespace, error) {
 	// Create clientset from the config.
-	clientset, err := auth.GetKubernetesClient()
+	clientset, err := auth.GetFakeOrLiveKubernetesClient()
 	if err != nil {
 		log.Printf("Get Kubernetes Client: %v", err)
 		return nil, err
@@ -33,7 +33,7 @@ func ListNamespaces() ([]corev1.Namespace, error) {
 func ListPodsInNamespace(namespace string) ([]string, error) {
 
 	// Create clientset from the config.
-	clientset, err := auth.GetKubernetesClient()
+	clientset, err := auth.GetFakeOrLiveKubernetesClient()
 	if err != nil {
 		log.Printf("Get Kubernetes Client: %v", err)
 		return nil, err
@@ -58,7 +58,7 @@ func ListPodsInNamespace(namespace string) ([]string, error) {
 // ListIngressInNamespace returns a list of ingress in the specified Kubernetes namespace.
 func ListIngressInNamespace(namespace string) ([]string, error) {
 	// Create clientset from the config.
-	clientset, err := auth.GetKubernetesClient()
+	clientset, err := auth.GetFakeOrLiveKubernetesClient()
 	if err != nil {
 		log.Printf("Get Kubernetes Client: %v", err)
 		return nil, err
@@ -81,7 +81,7 @@ func ListIngressInNamespace(namespace string) ([]string, error) {
 
 // ListServicesInNamespace returns a list of services in the specified namespace.
 func ListServicesInNamespace(namespace string) ([]string, error) {
-	clientset, err := auth.GetKubernetesClient()
+	clientset, err := auth.GetFakeOrLiveKubernetesClient()
 	if err != nil {
 		log.Printf("Get Kubernetes Client: %v", err)
 		return nil, err
@@ -103,6 +103,7 @@ func ListServicesInNamespace(namespace string) ([]string, error) {
 }
 
 func GetNamespaceResources() ([]models.NamespaceResources, error) {
+
 	namespaces, err := ListNamespaces()
 	if err != nil {
 		log.Printf("Unable to get Namespace with error : ", err)

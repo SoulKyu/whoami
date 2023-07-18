@@ -51,10 +51,10 @@
                     <h2>{{.Title}}</h2>
                     <p>{{.Content}}</p>
                     {{if .Authenticated}}
-                    <form action="/deletePage/{{.Title}}" method="POST">
+                    <form action="/deletePage/{{.ID}}" method="POST">
                         <button type="submit" class="delete-button">Supprimer la page</button>
                     </form>
-                    <form action="/updatePage/{{.Title}}" method="POST">
+                    <form action="/updatePage/{{.URL}}" method="POST">
                         <button type="submit" class="update-button">Modifier la page</button>
                     </form>
                     {{end}}
