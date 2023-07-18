@@ -119,11 +119,12 @@ func UpdatePage(page *models.Page) error {
 	return nil
 }
 
-func GetPageById(id *int) (*models.Page, error) {
+func GetPageById(id int) (*models.Page, error) {
 	db, err := GetDB()
 	if err != nil {
 		log.Fatal(err)
 	}
+	log.Printf("l'id de la page est le suivant: %d", id)
 
 	// Prépare une requête SQL pour insérer les données
 	query := "SELECT content, title, URL FROM pages WHERE id = ?"
@@ -134,9 +135,11 @@ func GetPageById(id *int) (*models.Page, error) {
 	if err != nil {
 		if err == sql.ErrNoRows {
 			// Aucune ligne trouvée
+			log.Printf("no page found with id: %d", id)
 			return nil, fmt.Errorf("no page found with id: %d", id)
 		}
 		// Autre erreur
+		log.Printf("an error happens while trying to scan: %v", err)
 		return nil, fmt.Errorf("an error happens while trying to scan: %v", err)
 	}
 

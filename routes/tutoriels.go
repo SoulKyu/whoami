@@ -16,7 +16,7 @@ func Tutoriel(c echo.Context) error {
 		log.Fatal(err)
 	}
 
-	rows, err := db.Query("SELECT title, content, url, ID FROM pages")
+	rows, err := db.Query("SELECT title, content, URL, id FROM pages")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -26,12 +26,15 @@ func Tutoriel(c echo.Context) error {
 
 	for rows.Next() {
 		page := &models.Page{}
-		log.Printf("Voici le contenu de notre row : %v", rows.Scan(&page.Title, &page.Content, &page.URL, &page.ID))
 		err := rows.Scan(&page.Title, &page.Content, &page.URL, &page.ID)
 		if err != nil {
-			log.Fatal(err)
+			log.Fatalf("Erreur logs du scan des pages : %v ", err)
 		}
 		pages = append(pages, page)
+	}
+
+	for _, page := range pages {
+		log.Printf("Voici le titre : %s, l'URL : %s et l'id : %d", page.Title, page.URL, page.ID)
 	}
 
 	tmpl := template.Must(template.ParseFiles("templates/mestutoriels.html"))

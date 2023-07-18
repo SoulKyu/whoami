@@ -22,7 +22,7 @@ type Error struct {
 }
 
 type Page struct {
-	ID      *int
+	ID      int
 	Title   string
 	Content string
 	URL 	string

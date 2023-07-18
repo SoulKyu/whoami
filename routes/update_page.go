@@ -3,11 +3,11 @@ package routes
 import (
 	"fmt"
 	"html/template"
-	"log"
 	"net/http"
+	"strconv"
+	"log"
 	"net/url"
 	"whoami/models"
-	"strconv"
 	"whoami/pkg/database"
 
 	"github.com/labstack/echo/v4"
@@ -16,17 +16,15 @@ import (
 
 func UpdatePageHandler(c echo.Context) error {
 	session, _ := sessionStore.Get(c.Request(), "session-name")
-	strid := c.Param("id")
-	var id *int
-	if strid != "" {
-		intValue, err := strconv.Atoi(strid)
-		if err != nil {
-			// Gestion de l'erreur de conversion
-			log.Printf("Erreur de conversion de l'ID : %v", err)
-		} else {
-			id = &intValue
-		}
+	idStr := c.Param("id")
+	id, err := strconv.Atoi(idStr)
+	
+	if err != nil {
+		log.Println("failed to convert id to int")
+		return err
 	}
+	log.Printf("Voici la valeur d'ID aprés convertion : %d", id)
+
 	fmt.Println("La titre de la page est le suivant : ", id)
 
 	page, err := database.GetPageById(id)

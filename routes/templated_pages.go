@@ -1,30 +1,27 @@
 package routes
 
 import (
-	"html/template"
+	"strconv"
 	"log"
+	"html/template"
 	"net/http"
 	"whoami/pkg/database"
-	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
 
 func TemplatedPages(c echo.Context) error {
 	session, _ := sessionStore.Get(c.Request(), "session-name")
-
-	strid := c.Param("id")
-	var id *int
-
-	if strid != "" {
-		intValue, err := strconv.Atoi(strid)
-		if err != nil {
-			// Gestion de l'erreur de conversion
-			log.Printf("Erreur de conversion de l'ID : %v", err)
-		} else {
-			id = &intValue
-		}
+	idStr := c.Param("id")
+	id, err := strconv.Atoi(idStr)
+	
+	if err != nil {
+		log.Println("failed to convert id to int")
+		return err
 	}
+	log.Printf("Voici la valeur d'ID aprés convertion : %d", id)
+	
+
 	// Récupérez la page de la base de données.
 	// Remplacez ceci par votre propre fonction pour obtenir une page par son titre.
 	page, err := database.GetPageById(id)
