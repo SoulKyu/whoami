@@ -4,10 +4,12 @@ import (
 	"html/template"
 	"io"
 	"whoami/routes"
+
 	//"whoami/pkg/auth"
 	"whoami/middleware"
 	"whoami/pkg/database"
 	"whoami/pkg/handlers"
+
 	//"net/http"
 
 	//"github.com/gorilla/sessions"
@@ -57,6 +59,7 @@ func main() {
 	e.POST("/createPage", routes.CreatePage, middleware.IsLoggedIn)
 	e.POST("/deletePage/:title", routes.DeletePageByTitle, middleware.IsLoggedIn)
 	e.POST("/updatePage/:title", routes.UpdatePageHandler, middleware.IsLoggedIn)
+	e.POST("/kubernetesNamespace/:namespace", routes.UpdatePageHandler, middleware.IsLoggedIn)
 	e.POST("/perfromUpdatePage", routes.PerformUpdate, middleware.IsLoggedIn)
 	e.GET("/pages/:title", routes.TemplatedPages)
 	e.Logger.Fatal(e.Start(":8080"))

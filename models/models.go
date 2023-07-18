@@ -1,6 +1,7 @@
 package models
 
 import (
+	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	networkingv1 "k8s.io/api/networking/v1"
 )
@@ -34,8 +35,12 @@ type Application struct {
 }
 
 type NamespaceResources struct {
-	Namespace string
-	Pods      []string
-	Ingresses []string
-	Services  []string
+	Namespace    corev1.Namespace
+	Pods         []corev1.Pod
+	Ingresses    []networkingv1.Ingress
+	Services     []corev1.Service
+	Deployments  []appsv1.Deployment
+	StatefulSets []appsv1.StatefulSet
+	DaemonSets   []appsv1.DaemonSet
+	Endpoints    []corev1.Endpoints
 }
