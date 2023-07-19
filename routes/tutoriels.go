@@ -16,7 +16,7 @@ func Tutoriel(c echo.Context) error {
 		log.Fatal(err)
 	}
 
-	rows, err := db.Query("SELECT title, content, URL, id FROM pages")
+	rows, err := db.Query("SELECT id, title, content, URL  FROM pages")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -26,7 +26,7 @@ func Tutoriel(c echo.Context) error {
 
 	for rows.Next() {
 		page := &models.Page{}
-		err := rows.Scan(&page.Title, &page.Content, &page.URL, &page.ID)
+		err := rows.Scan(&page.ID, &page.Title, &page.Content, &page.URL)
 		if err != nil {
 			log.Fatalf("Erreur logs du scan des pages : %v ", err)
 		}

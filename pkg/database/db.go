@@ -37,12 +37,12 @@ func GetDB() (*sql.DB, error) {
 	// Créez la table des utilisateurs si elle n'existe pas déjà
 	_, err = db.Exec(`
 		CREATE TABLE IF NOT EXISTS users (
-			id INT AUTO_INCREMENT PRIMARY KEY,
+			id INTEGER PRIMARY KEY,
 			username TEXT,
 			password TEXT
 		);
 		CREATE TABLE IF NOT EXISTS pages (
-			id INT AUTO_INCREMENT PRIMARY KEY,
+			id INTEGER PRIMARY KEY,
 			title TEXT NOT NULL,
 			content TEXT,
 			author TEXT,
@@ -161,11 +161,12 @@ func GetPageByTitle(title string) (*models.Page, error) {
 	}
 
 	// Prépare une requête SQL pour insérer les données
-	query := "SELECT content FROM pages WHERE title = ?"
+	query := "SELECT id, content FROM pages WHERE title = ?"
 	row := db.QueryRow(query, title)
 
+	var id int
 	var content string
-	err = row.Scan(&content)
+	err = row.Scan(&id, &content)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			// Aucune ligne trouvée
@@ -176,6 +177,7 @@ func GetPageByTitle(title string) (*models.Page, error) {
 	}
 
 	page := &models.Page{
+		ID: 	 id,
 		Title:   title,
 		Content: content,
 	}
